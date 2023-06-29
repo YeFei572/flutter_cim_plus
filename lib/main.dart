@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/route/route.dart';
+import 'package:flutter_cim_plus/style/index.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -11,11 +12,11 @@ void main() {
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
       systemNavigationBarDividerColor: Colors.transparent,
       systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: Brightness.light,
     );
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         enableLog: true,
         initialRoute: AppPages.initial,
         getPages: AppPages.routes,
+        theme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        darkTheme: AppTheme.dark,
         // navigatorObservers: [],
       ),
       designSize: const Size(375, 812),
