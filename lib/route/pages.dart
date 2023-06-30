@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cim_plus/route/names.dart';
+import 'package:flutter_cim_plus/view/home/home_bindings.dart';
+import 'package:flutter_cim_plus/view/home/home_page.dart';
 import 'package:get/get.dart';
 
 import '../middlewares/middlewares.dart';
@@ -29,5 +31,10 @@ class AppPages {
       page: () => const SignInPage(),
       binding: SignInBinding(),
     ),
+    GetPage(
+      name: AppRoutes.home,
+      page: () => const HomePage(),
+      binding: HomeBindings(),
+    )
   ];
 }

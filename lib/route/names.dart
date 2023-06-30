@@ -4,4 +4,7 @@ class AppRoutes {
 
   /// 登录
   static const login = '/sign_in';
+
+  /// 主页
+  static const home = '/home';
 }
