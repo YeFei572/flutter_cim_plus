@@ -1,13 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_cim_plus/route/route.dart';
+import 'package:flutter_cim_plus/http/http.dart';
+import 'package:flutter_login/flutter_login.dart';
 import 'package:get/get.dart';
 
 class SignInController extends GetxController {
   late String title = 'CIM-PLUS';
 
-  login(data) {
-    debugPrint("loginData: $data");
-    Get.offNamed(AppRoutes.home);
+  login(LoginData data) async {
+    final Map<String, String> loginData = {
+      'phone': data.name,
+      'password': data.password
+    };
+    // await HttpUtil().post('/login', data: loginData).then((value) {
+    //   debugPrint("登录接口：$value");
+    //   Get.offNamed(AppRoutes.home);
+    // });
+    await DioUtils.instance.requestNetwork(Method.post, '/login').then((value) {
+      print('value:::::$value');
+    });
   }
 
   validate(name) {
