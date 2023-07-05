@@ -1,11 +1,11 @@
-import 'package:flutter_cim_plus/http/http.dart';
+import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:get/get.dart';
 
 class SignInController extends GetxController {
   late String title = 'CIM-PLUS';
 
-  login(LoginData data) async {
+  Future<String?>? login(LoginData data) async {
     final Map<String, String> loginData = {
       'phone': data.name,
       'password': data.password
@@ -14,9 +14,10 @@ class SignInController extends GetxController {
     //   debugPrint("登录接口：$value");
     //   Get.offNamed(AppRoutes.home);
     // });
-    await DioUtils.instance.requestNetwork(Method.post, '/login').then((value) {
-      print('value:::::$value');
-    });
+    // var resp = await ApiService().login(loginData);
+    // LogD(resp.message ?? '');
+    LogI('----> $loginData');
+    return null;
   }
 
   validate(name) {
