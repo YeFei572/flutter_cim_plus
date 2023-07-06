@@ -1,6 +1,10 @@
+import 'package:flutter_cim_plus/model/base_entity.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:get/get.dart';
+
+import '../../http/apiservice/api_service.dart';
+import '../../model/user_info.dart';
 
 class SignInController extends GetxController {
   late String title = 'CIM-PLUS';
@@ -10,14 +14,11 @@ class SignInController extends GetxController {
       'phone': data.name,
       'password': data.password
     };
-    // await HttpUtil().post('/login', data: loginData).then((value) {
-    //   debugPrint("登录接口：$value");
+    BaseEntity<UserInfo> resp = await ApiService().login(loginData);
+    if (resp.code == 0) {}
     //   Get.offNamed(AppRoutes.home);
-    // });
-    // var resp = await ApiService().login(loginData);
-    // LogD(resp.message ?? '');
     LogI('----> $loginData');
-    return null;
+    return 'null';
   }
 
   validate(name) {
