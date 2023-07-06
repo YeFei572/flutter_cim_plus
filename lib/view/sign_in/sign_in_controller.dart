@@ -1,10 +1,11 @@
 import 'package:flutter_cim_plus/model/base_entity.dart';
-import 'package:flutter_cim_plus/utils/log_utils.dart';
+import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:get/get.dart';
 
 import '../../http/apiservice/api_service.dart';
 import '../../model/user_info.dart';
+import '../../route/route.dart';
 
 class SignInController extends GetxController {
   late String title = 'CIM-PLUS';
@@ -15,10 +16,10 @@ class SignInController extends GetxController {
       'password': data.password
     };
     BaseEntity<UserInfo> resp = await ApiService().login(loginData);
-    if (resp.code == 0) {}
-    //   Get.offNamed(AppRoutes.home);
-    LogI('----> $loginData');
-    return 'null';
+    if (resp.code == 0 && resp.data != null) {
+      StoreUtil.store.write('userInfo', resp.data);
+      Get.offNamed(AppRoutes.home);
+    }
   }
 
   validate(name) {

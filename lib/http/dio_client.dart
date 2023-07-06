@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:flutter_cim_plus/http/interceptor/resp_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../constant/constants.dart';
@@ -48,6 +49,7 @@ class DioClient {
     dio = Dio(options);
 
     // 添加error拦截器
+    dio.interceptors.add(RespInterceptor());
     dio.interceptors.add(ErrorInterceptor());
     dio.interceptors.add(HttpParamsInterceptor());
     dio.interceptors.add(PrettyDioLogger(
