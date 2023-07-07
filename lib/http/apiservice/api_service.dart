@@ -5,6 +5,7 @@ import 'package:flutter_cim_plus/model/user_info.dart';
 import 'package:retrofit/http.dart';
 
 import '../../model/base_entity.dart';
+import '../../model/friend_info.dart';
 
 part 'api_service.g.dart';
 
@@ -17,4 +18,7 @@ abstract class ApiService {
 
   @POST('/login')
   Future<BaseEntity<UserInfo>> login(@Body() Map<String, String> loginData);
+
+  @GET('/friend/getMyFriends')
+  Future<BaseEntity<List<FriendInfo>>> getMyFriends();
 }

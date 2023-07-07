@@ -46,7 +46,13 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.dark,
         themeMode: ThemeMode.system,
         darkTheme: AppTheme.dark,
-        // navigatorObservers: [],
+        navigatorObservers: [AppPages.observer],
+        builder: (context, widget) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: widget!,
+          );
+        },
       ),
       designSize: const Size(375, 812),
     );

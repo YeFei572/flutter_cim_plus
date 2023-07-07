@@ -8,8 +8,11 @@ class ChatPage extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Obx(() => Text(controller.title.value)),
+      ),
       body: SafeArea(
-        child: Container(child: Text('好友')),
+        child: Container(),
       ),
     );
   }

@@ -1,5 +1,6 @@
-import 'package:flutter_cim_plus/view/chat/chat_controller.dart';
 import 'package:get/get.dart';
+
+import 'chat_controller.dart';
 
 class ChatBindings implements Bindings {
   @override

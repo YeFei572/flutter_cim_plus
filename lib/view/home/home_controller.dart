@@ -34,11 +34,12 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     // 初始静态数据
-    tabTitles = ['好友', '发现', '我的'];
+    tabTitles = ['聊天', '好友', '发现', '我的'];
     bottomTabs = <BottomNavigationBarItem>[
-      _buildBottomNavigationBarItem(Icons.people, tabTitles[0]),
-      _buildBottomNavigationBarItem(Icons.discord, tabTitles[1]),
-      _buildBottomNavigationBarItem(Icons.person, tabTitles[2]),
+      _buildBottomNavigationBarItem(Icons.message_rounded, tabTitles[0]),
+      _buildBottomNavigationBarItem(Icons.people, tabTitles[1]),
+      _buildBottomNavigationBarItem(Icons.discord, tabTitles[2]),
+      _buildBottomNavigationBarItem(Icons.person, tabTitles[3]),
     ];
     pageController = PageController(initialPage: page.value);
   }

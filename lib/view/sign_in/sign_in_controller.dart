@@ -18,7 +18,7 @@ class SignInController extends GetxController {
     BaseEntity<UserInfo> resp = await ApiService().login(loginData);
     if (resp.code == 0 && resp.data != null) {
       StoreUtil.store.write('userInfo', resp.data);
-      Get.offNamed(AppRoutes.home);
+      Get.offAndToNamed(AppRoutes.home);
     }
   }
 

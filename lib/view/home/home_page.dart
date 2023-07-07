@@ -4,6 +4,7 @@ import 'package:flutter_cim_plus/view/home/home_controller.dart';
 import 'package:get/get.dart';
 
 import '../discover/discover_page.dart';
+import '../friend/friend_page.dart';
 import '../mine/mine_page.dart';
 
 class HomePage extends GetView<HomeController> {
@@ -23,6 +24,7 @@ class HomePage extends GetView<HomeController> {
       onPageChanged: controller.handlePageChanged,
       children: const [
         ChatPage(),
+        FriendPage(),
         DiscoverPage(),
         MinePage(),
       ],
