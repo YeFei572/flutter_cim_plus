@@ -1,4 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_cim_plus/constant/constants.dart';
+import 'package:flutter_cim_plus/utils/sotre_util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../model/user_info.dart';
 
 ///请求参数拦截器
 class HttpParamsInterceptor extends Interceptor {
@@ -16,9 +21,18 @@ class HttpParamsInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    var headers = options.headers;
-    // headers["token"] =
-    //     "MHRYOVRHbEZBL1M0anlXRTdrYWY3Z2hpL1hzWFNZTTh4dWI1NXdKdjRFTG1obUhrN1hjbnJieDlZUnUwT1ArWkRkbmp0ajdIR3dpU1dSdGJRTFRnNnZUZEtwV1dIQWpxSWFORjNUU3JsRzA9";
+    if (!Constant.ignorePath.contains(options.path)) {
+      Map<String, dynamic> headers = options.headers;
+
+      /// 开始读取token
+      UserInfo info = StoreUtil.store.read('userInfo');
+      if (null == info && info.token.isEmpty) {
+        Fluttertoast.showToast(msg: '没有登录！');
+        return;
+      }
+      headers = {'cim-plus': info.token};
+      options.headers.addAll(headers);
+    }
     super.onRequest(options, handler);
   }
 

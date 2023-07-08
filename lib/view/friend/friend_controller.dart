@@ -14,13 +14,16 @@ class FriendController extends GetxController {
 
   @override
   void onInit() {
+    LogI("初始化朋友");
     // 初始化好友列表
-    initFriendData;
+    initFriendData();
     super.onInit();
   }
 
   Future<void> initFriendData() async {
     BaseEntity<List<FriendInfo>> res = await ApiService().getMyFriends();
-    LogI(res.message ?? '');
+    if (res.code == 0 && res.data != null && res.data!.isNotEmpty) {
+      friendList.value = res.data!;
+    }
   }
 }

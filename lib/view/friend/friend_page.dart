@@ -1,7 +1,9 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cim_plus/widget/net_image_cached.dart';
 import 'package:get/get.dart';
 
+import '../../model/friend_info.dart';
 import 'friend_controller.dart';
 
 class FriendPage extends GetView<FriendController> {
@@ -14,9 +16,21 @@ class FriendPage extends GetView<FriendController> {
         title: const Text('好友'),
         centerTitle: true,
       ),
-      body: EasyRefresh(
-        onRefresh: () => {},
-        child: Obx(() => Text(controller.friendList.length.toString())),
+      body: GetX<FriendController>(
+        builder: (controller) => EasyRefresh(
+          onRefresh: controller.initFriendData,
+          child: ListView.separated(
+            itemBuilder: (item, index) {
+              FriendInfo info = controller.friendList[index];
+              return ListTile(
+                leading: netImageCached(info.avatar!),
+                title: Text(info.remark ??= info.nickname ?? ''),
+              );
+            },
+            separatorBuilder: (_, index) => const Divider(),
+            itemCount: controller.friendList.length,
+          ),
+        ),
       ),
     );
   }
