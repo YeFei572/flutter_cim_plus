@@ -34,9 +34,4 @@ class FriendPage extends GetView<FriendController> {
       ),
     );
   }
-
-// _buildFriendList() {
-//   // return Obx(() => Text(controller.friendList.length.toString()));
-//   return GetBuilder(builder: (controller) => Text(controller.f));
-// }
 }

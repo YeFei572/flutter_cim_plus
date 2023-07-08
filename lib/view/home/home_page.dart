@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cim_plus/view/chat/chat_page.dart';
 import 'package:flutter_cim_plus/view/home/home_controller.dart';
+import 'package:flutter_cim_plus/widget/keep_alive_wrapper.dart';
 import 'package:get/get.dart';
 
 import '../discover/discover_page.dart';
@@ -12,9 +13,14 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildPageView(),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+    return Obx(
+      () => WillPopScope(
+        onWillPop: controller.exit,
+        child: Scaffold(
+          body: _buildPageView(),
+          bottomNavigationBar: _buildBottomNavigationBar(),
+        ),
+      ),
     );
   }
 
@@ -23,24 +29,20 @@ class HomePage extends GetView<HomeController> {
       controller: controller.pageController,
       onPageChanged: controller.handlePageChanged,
       children: const [
-        ChatPage(),
-        FriendPage(),
-        DiscoverPage(),
-        MinePage(),
+        KeepAliveWrapper(child: ChatPage()),
+        KeepAliveWrapper(child: FriendPage()),
+        KeepAliveWrapper(child: DiscoverPage()),
+        KeepAliveWrapper(child: MinePage()),
       ],
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return Obx(
-      () => BottomNavigationBar(
+  Widget _buildBottomNavigationBar() => BottomNavigationBar(
         items: controller.bottomTabs,
         currentIndex: controller.page.value,
         type: BottomNavigationBarType.fixed,
         onTap: controller.handleNavBarTap,
         showSelectedLabels: true,
         showUnselectedLabels: true,
-      ),
-    );
-  }
+      );
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../style/color.dart';
@@ -9,6 +11,7 @@ class HomeController extends GetxController {
 
   /// 成员变量
   late final List<String> tabTitles;
+  late DateTime? lastPopTime = DateTime.now();
 
   RxInt page = 0.obs;
 
@@ -42,6 +45,20 @@ class HomeController extends GetxController {
       _buildBottomNavigationBarItem(Icons.person, tabTitles[3]),
     ];
     pageController = PageController(initialPage: page.value);
+  }
+
+  Future<bool> exit() async {
+    // 点击返回键的操作
+    if (lastPopTime == null ||
+        DateTime.now().difference(lastPopTime!) > const Duration(seconds: 2)) {
+      lastPopTime = DateTime.now();
+      Fluttertoast.showToast(msg: '再按一次退出');
+      return false;
+    } else {
+      lastPopTime = DateTime.now();
+      await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    }
+    return true;
   }
 
   _buildBottomNavigationBarItem(IconData iconfont, String label) {

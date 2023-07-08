@@ -9,7 +9,7 @@ import '../../model/friend_info.dart';
 class FriendController extends GetxController {
   FriendController();
 
-  RxList<FriendInfo> friendList = <FriendInfo>[].obs;
+  final friendList = <FriendInfo>[].obs;
   EasyRefreshController refreshController = EasyRefreshController();
 
   @override
@@ -25,5 +25,11 @@ class FriendController extends GetxController {
     if (res.code == 0 && res.data != null && res.data!.isNotEmpty) {
       friendList.value = res.data!;
     }
+  }
+
+  @override
+  void onClose() {
+    refreshController.dispose();
+    super.onClose();
   }
 }
