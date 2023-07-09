@@ -1,17 +1,26 @@
+import 'dart:io';
+
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cim_plus/proto/RequestProto.pb.dart';
+import 'package:flutter_cim_plus/utils/log_utils.dart';
+import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import '../../model/user_info.dart';
 import '../../style/color.dart';
+import '../../utils/encodec_utils.dart';
 
 class HomeController extends GetxController {
-  HomeController();
-
   /// 成员变量
   late final List<String> tabTitles;
   late DateTime? lastPopTime = DateTime.now();
+
+  // 关于socket的常量
+  late Socket socket;
 
   RxInt page = 0.obs;
 
@@ -45,6 +54,27 @@ class HomeController extends GetxController {
       _buildBottomNavigationBarItem(Icons.person, tabTitles[3]),
     ];
     pageController = PageController(initialPage: page.value);
+    // 初始化socket的信息
+    initSocket();
+  }
+
+  Future<void> initSocket() async {
+    socket = await Socket.connect('192.168.31.176', 11211);
+    LogD('准备发起socket链接并进行鉴权');
+    UserInfo info = StoreUtil.store.read('userInfo');
+    sendMsg(info.id, info.token, MsgType.loginMsg);
+  }
+
+  /// 向服务器发送消息
+  void sendMsg(num currentUserId, String message, MsgType msgType) {
+    // 准备消息参数
+    RequestProto req = RequestProto.create();
+    req.reqId = Int64(currentUserId.toInt());
+    req.type = MsgType.loginMsg.index;
+    req.reqMsg = message;
+    // 发送消息
+    Uint8List buff = req.writeToBuffer();
+    socket.add(getProtocBufferData(buff));
   }
 
   Future<bool> exit() async {
@@ -61,15 +91,15 @@ class HomeController extends GetxController {
     return true;
   }
 
-  _buildBottomNavigationBarItem(IconData iconfont, String label) {
+  _buildBottomNavigationBarItem(IconData iconFont, String label) {
     return BottomNavigationBarItem(
       icon: Icon(
-        iconfont,
+        iconFont,
         color: AppColor.primaryText,
         size: 20.w,
       ),
       activeIcon: Icon(
-        iconfont,
+        iconFont,
         color: AppColor.secondaryColor,
         size: 20.w,
       ),
@@ -83,4 +113,14 @@ class HomeController extends GetxController {
     super.onClose();
     pageController.dispose();
   }
+}
+
+// 消息类型
+enum MsgType {
+  loginMsg,
+  txtMsg,
+  picMsg,
+  fileMsg,
+  voiceMsg,
+  videoMsg,
 }
