@@ -32,3 +32,24 @@ Uint8List getProtocBufferData(Uint8List data) {
   list.addAll(data);
   return Uint8List.fromList(list);
 }
+
+Uint8List decodeProtocBufferData(Uint8List data) {
+  int length = 0;
+  int headerLength = 0;
+  int shift = 0;
+// 解析头部长度
+  for (int i = 0; i < 4; i++) {
+    int b = data[i];
+    length |= (b & 127) << shift;
+    if (b < 128) {
+      headerLength = i + 1;
+      break;
+    }
+    shift += 7;
+  }
+// 跳过头部
+  int start = headerLength;
+// 解析body
+  List<int> body = data.sublist(start, start + length);
+  return Uint8List.fromList(body);
+}

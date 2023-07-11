@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/route/route.dart';
 import 'package:flutter_cim_plus/style/index.dart';
+import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,6 +15,13 @@ void main() async {
 
   /// 初始化本地存储工具
   await GetStorage.init();
+
+  /// 如果token存在，则直接跳转到首页去
+  Map<String, dynamic> res = StoreUtil.store.read('userInfo');
+  bool loginFlag = false;
+  if (res != null && res['token'].toString().isNotEmpty) {
+    loginFlag = true;
+  }
 
   /// 初始化网络工具
   await initNetwork();
@@ -28,11 +36,15 @@ void main() async {
     );
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
-  runApp(const MyApp());
+  runApp(MyApp(
+    loginFlag: loginFlag,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool loginFlag;
+
+  const MyApp({Key? key, required this.loginFlag}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +53,7 @@ class MyApp extends StatelessWidget {
         title: 'CIM-PLUS',
         debugShowCheckedModeBanner: false,
         enableLog: true,
-        initialRoute: AppPages.initial,
+        initialRoute: loginFlag ? AppRoutes.home : AppPages.initial,
         getPages: AppPages.routes,
         theme: AppTheme.dark,
         themeMode: ThemeMode.system,

@@ -4,6 +4,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/proto/RequestProto.pb.dart';
+import 'package:flutter_cim_plus/route/names.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,10 +60,20 @@ class HomeController extends GetxController {
   }
 
   Future<void> initSocket() async {
-    socket = await Socket.connect('192.168.31.176', 11211);
+    UserInfo? info = await StoreUtil.loadInfo();
+    if (null == info || info.routeInfo == null) {
+      Get.offAndToNamed(AppRoutes.login);
+      Fluttertoast.showToast(msg: '登录失效，请重新登录！');
+    }
+    socket = await Socket.connect(
+        info.routeInfo?.ip, info.routeInfo!.serverPort ?? 11211);
     LogD('准备发起socket链接并进行鉴权');
-    UserInfo info = StoreUtil.store.read('userInfo');
     sendMsg(info.id, info.token, MsgType.loginMsg);
+    socket.listen((event) {
+      Uint8List list = decodeProtocBufferData(event);
+      RequestProto proto = RequestProto.fromBuffer(list);
+      LogI('收到：${proto.reqMsg}');
+    });
   }
 
   /// 向服务器发送消息
@@ -70,7 +81,7 @@ class HomeController extends GetxController {
     // 准备消息参数
     RequestProto req = RequestProto.create();
     req.reqId = Int64(currentUserId.toInt());
-    req.type = MsgType.loginMsg.index;
+    req.type = MsgType.loginMsg.index + 1;
     req.reqMsg = message;
     // 发送消息
     Uint8List buff = req.writeToBuffer();
