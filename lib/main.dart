@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/route/route.dart';
 import 'package:flutter_cim_plus/style/index.dart';
+import 'package:flutter_cim_plus/utils/database_helper.dart';
 import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,9 @@ void main() async {
   if (res != null && res['token'].toString().isNotEmpty) {
     loginFlag = true;
   }
+
+  /// 初始化本地数据库
+  DatabaseHelper.initializeDatabase();
 
   /// 初始化网络工具
   await initNetwork();

@@ -9,11 +9,12 @@ class ChatPage extends GetView<ChatController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(controller.title.value)),
+        title: const Text('聊天'),
+        centerTitle: true,
       ),
-      body: SafeArea(
-        child: Container(),
-      ),
+      body: GetX<ChatController>(builder: (controller) =>  EasyRefresh(
+    controller: controller.
+      ),)
     );
   }
 }
