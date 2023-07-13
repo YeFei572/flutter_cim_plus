@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import '../../constant/enums.dart';
 import '../../model/user_info.dart';
 import '../../style/color.dart';
 import '../../utils/encodec_utils.dart';
@@ -62,8 +63,9 @@ class HomeController extends GetxController {
   Future<void> initSocket() async {
     UserInfo? info = await StoreUtil.loadInfo();
     if (null == info || info.routeInfo == null) {
-      Get.offAndToNamed(AppRoutes.login);
       Fluttertoast.showToast(msg: '登录失效，请重新登录！');
+      Get.offAndToNamed(AppRoutes.login);
+      return;
     }
     socket = await Socket.connect(
         info.routeInfo?.ip, info.routeInfo!.serverPort ?? 11211);
@@ -81,7 +83,7 @@ class HomeController extends GetxController {
     // 准备消息参数
     RequestProto req = RequestProto.create();
     req.reqId = Int64(currentUserId.toInt());
-    req.type = MsgType.loginMsg.index + 1;
+    req.type = MsgType.loginMsg.code;
     req.reqMsg = message;
     // 发送消息
     Uint8List buff = req.writeToBuffer();
@@ -124,14 +126,4 @@ class HomeController extends GetxController {
     super.onClose();
     pageController.dispose();
   }
-}
-
-// 消息类型
-enum MsgType {
-  loginMsg,
-  txtMsg,
-  picMsg,
-  fileMsg,
-  voiceMsg,
-  videoMsg,
 }

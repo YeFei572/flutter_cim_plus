@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../constant/enums.dart';
 import '../model/chat_record.dart';
 
 class DatabaseHelper {
@@ -40,7 +41,7 @@ class DatabaseHelper {
           msgType INTEGER NOT NULL,
           createTime INTEGER NOT NULL,
           chatType INTEGER NOT NULL CHECK (chatType IN (1, 2)),
-          logicType INTEGER NOT NULL CHECK (chatType IN (1, 2)),
+          logicType INTEGER NOT NULL CHECK (logicType IN (1, 2))
       );
       
       CREATE INDEX idx_user_id ON chat_records(userId);
@@ -51,6 +52,18 @@ class DatabaseHelper {
   Future<void> close() async {
     final db = await database;
     db.close();
+  }
+
+  Future<void> insertRecord(ChatRecord record) async {
+    final db = await database;
+    // 插入普通聊天记录
+    await db.insert('chat_records', record.toJson());
+    record.logicType = LogicType.friend.code;
+    // 删除旧的逻辑数据并插入新的数据
+    await db.delete('chat_records',
+        where: 'targetId = ? and logicType = ?',
+        whereArgs: [record.targetId, record.logicType]);
+    await db.insert('chat_records', record.toJson());
   }
 
   /// 获取聊天记录列表，逻辑类型，用于展示最近和哪些用户进行聊天

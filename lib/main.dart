@@ -18,7 +18,7 @@ void main() async {
   await GetStorage.init();
 
   /// 如果token存在，则直接跳转到首页去
-  Map<String, dynamic> res = StoreUtil.store.read('userInfo');
+  Map<String, dynamic>? res = StoreUtil.store.read('userInfo');
   bool loginFlag = false;
   if (res != null && res['token'].toString().isNotEmpty) {
     loginFlag = true;
