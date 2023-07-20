@@ -73,7 +73,7 @@ class HomeController extends GetxController {
     sendMsg(info.id, info.token, MsgType.loginMsg);
     socket.listen((event) {
       Uint8List list = decodeProtocBufferData(event);
-      RequestProto proto = RequestProto.fromBuffer(list);
+      BaseRequestProto proto = BaseRequestProto.fromBuffer(list);
       LogI('收到：${proto.reqMsg}');
     });
   }
@@ -81,8 +81,8 @@ class HomeController extends GetxController {
   /// 向服务器发送消息
   void sendMsg(num currentUserId, String message, MsgType msgType) {
     // 准备消息参数
-    RequestProto req = RequestProto.create();
-    req.reqId = Int64(currentUserId.toInt());
+    BaseRequestProto req = BaseRequestProto.create();
+    req.fromId = Int64(currentUserId.toInt());
     req.type = MsgType.loginMsg.code;
     req.reqMsg = message;
     // 发送消息

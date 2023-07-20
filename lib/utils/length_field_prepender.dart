@@ -14,7 +14,7 @@ class LengthFieldPrepender {
     }
   }
 
-  List<int> encode(RequestProto wsBaseReqProto) {
+  List<int> encode(BaseRequestProto wsBaseReqProto) {
     Uint8List msgBuffer = wsBaseReqProto.writeToBuffer();
     int length = msgBuffer.length;
     switch (this.lengthFieldLength) {
@@ -50,15 +50,15 @@ class LengthFieldPrepender {
     }
   }
 
-  RequestProto decode(Uint8List msg) {
+  BaseRequestProto decode(Uint8List msg) {
     print('-------msgBuffer.length = ${msg.length} ');
     if (msg.length < 200) {
-      return RequestProto.fromBuffer(msg.sublist(1, msg.length));
+      return BaseRequestProto.fromBuffer(msg.sublist(1, msg.length));
     }
     if (msg.length < 65536) {
-      return RequestProto.fromBuffer(msg.sublist(2, msg.length));
+      return BaseRequestProto.fromBuffer(msg.sublist(2, msg.length));
     } else {
-      return RequestProto.fromBuffer(msg.sublist(4, msg.length));
+      return BaseRequestProto.fromBuffer(msg.sublist(4, msg.length));
     }
   }
 }
