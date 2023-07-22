@@ -68,7 +68,7 @@ class HomeController extends GetxController {
       return;
     }
     socket = await Socket.connect(
-        info.routeInfo?.ip, info.routeInfo!.serverPort ?? 11211);
+        info.routeInfo?.ip, info.routeInfo!.serverPort ?? 17592);
     LogD('准备发起socket链接并进行鉴权');
     sendMsg(info.id, info.token, MsgType.loginMsg);
     socket.listen((event) {

@@ -6,9 +6,16 @@ class StoreUtil {
   static final store = GetStorage();
 
   static Future<UserInfo?> loadInfo() async {
-    Map<String, dynamic>? res = store.read('userInfo');
-    if (null != res && null != res['routeInfo']) {
-      return UserInfo.fromJson(res);
+    // Map<String, dynamic>? res = store.read('userInfo');
+    dynamic temp = store.read('userInfo');
+    if (null == temp) {
+      return null;
+    }
+    if (temp is UserInfo?) {
+      return temp;
+    }
+    if (temp is Map<String, dynamic> && null != temp['routeInfo']) {
+      return UserInfo.fromJson(temp);
     } else {
       return null;
     }
