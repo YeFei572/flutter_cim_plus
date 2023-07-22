@@ -14,16 +14,20 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class RequestProto extends $pb.GeneratedMessage {
-  factory RequestProto() => create();
-  RequestProto._() : super();
-  factory RequestProto.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RequestProto.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+class BaseRequestProto extends $pb.GeneratedMessage {
+  factory BaseRequestProto() => create();
+  BaseRequestProto._() : super();
+  factory BaseRequestProto.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory BaseRequestProto.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RequestProto', package: const $pb.PackageName(_omitMessageNames ? '' : 'cn.v2ss.server.protocol'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BaseRequestProto', createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'reqMsg', protoName: 'reqMsg')
-    ..aInt64(2, _omitFieldNames ? '' : 'reqId', protoName: 'reqId')
+    ..aInt64(2, _omitFieldNames ? '' : 'requestId', protoName: 'requestId')
     ..a<$core.int>(3, _omitFieldNames ? '' : 'type', $pb.PbFieldType.O3)
+    ..aInt64(4, _omitFieldNames ? '' : 'fromId', protoName: 'fromId')
+    ..aInt64(5, _omitFieldNames ? '' : 'receiveId', protoName: 'receiveId')
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'msgCode', $pb.PbFieldType.O3, protoName: 'msgCode')
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'chatType', $pb.PbFieldType.O3, protoName: 'chatType')
     ..hasRequiredFields = false
   ;
 
@@ -31,22 +35,22 @@ class RequestProto extends $pb.GeneratedMessage {
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  RequestProto clone() => RequestProto()..mergeFromMessage(this);
+  BaseRequestProto clone() => BaseRequestProto()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  RequestProto copyWith(void Function(RequestProto) updates) => super.copyWith((message) => updates(message as RequestProto)) as RequestProto;
+  BaseRequestProto copyWith(void Function(BaseRequestProto) updates) => super.copyWith((message) => updates(message as BaseRequestProto)) as BaseRequestProto;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RequestProto create() => RequestProto._();
-  RequestProto createEmptyInstance() => create();
-  static $pb.PbList<RequestProto> createRepeated() => $pb.PbList<RequestProto>();
+  static BaseRequestProto create() => BaseRequestProto._();
+  BaseRequestProto createEmptyInstance() => create();
+  static $pb.PbList<BaseRequestProto> createRepeated() => $pb.PbList<BaseRequestProto>();
   @$core.pragma('dart2js:noInline')
-  static RequestProto getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RequestProto>(create);
-  static RequestProto? _defaultInstance;
+  static BaseRequestProto getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BaseRequestProto>(create);
+  static BaseRequestProto? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get reqMsg => $_getSZ(0);
@@ -58,13 +62,13 @@ class RequestProto extends $pb.GeneratedMessage {
   void clearReqMsg() => clearField(1);
 
   @$pb.TagNumber(2)
-  $fixnum.Int64 get reqId => $_getI64(1);
+  $fixnum.Int64 get requestId => $_getI64(1);
   @$pb.TagNumber(2)
-  set reqId($fixnum.Int64 v) { $_setInt64(1, v); }
+  set requestId($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasReqId() => $_has(1);
+  $core.bool hasRequestId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearReqId() => clearField(2);
+  void clearRequestId() => clearField(2);
 
   @$pb.TagNumber(3)
   $core.int get type => $_getIZ(2);
@@ -74,6 +78,42 @@ class RequestProto extends $pb.GeneratedMessage {
   $core.bool hasType() => $_has(2);
   @$pb.TagNumber(3)
   void clearType() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get fromId => $_getI64(3);
+  @$pb.TagNumber(4)
+  set fromId($fixnum.Int64 v) { $_setInt64(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasFromId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFromId() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get receiveId => $_getI64(4);
+  @$pb.TagNumber(5)
+  set receiveId($fixnum.Int64 v) { $_setInt64(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasReceiveId() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearReceiveId() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get msgCode => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set msgCode($core.int v) { $_setSignedInt32(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasMsgCode() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMsgCode() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get chatType => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set chatType($core.int v) { $_setSignedInt32(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasChatType() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearChatType() => clearField(7);
 }
 
 
