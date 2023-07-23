@@ -21,4 +21,7 @@ abstract class ApiService {
 
   @GET('/friend/getMyFriends')
   Future<BaseEntity<List<FriendInfo>>> getMyFriends();
+
+  @GET('/friend/queryNewFriend/{phone}')
+  Future<FriendInfo> queryNewFriend(@Path("phone") String phone);
 }

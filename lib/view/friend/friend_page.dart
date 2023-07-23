@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../model/friend_info.dart';
 import 'friend_controller.dart';
+import 'request/friend_request.dart';
 
 class FriendPage extends GetView<FriendController> {
   const FriendPage({super.key});
@@ -15,6 +16,14 @@ class FriendPage extends GetView<FriendController> {
       appBar: AppBar(
         title: const Text('好友'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const FriendRequest()),
+            ),
+            icon: const Icon(Icons.add),
+          )
+        ],
       ),
       body: GetX<FriendController>(
         builder: (controller) => EasyRefresh(
