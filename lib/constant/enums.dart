@@ -24,3 +24,15 @@ enum LogicType {
 
   const LogicType(this.code, this.msg);
 }
+
+/// 登录状态
+enum LoginState {
+  nonAuth(9100, 'token无效'),
+  success(9000, 'token无效'),
+  ;
+
+  final int code;
+  final String msg;
+
+  const LoginState(this.code, this.msg);
+}

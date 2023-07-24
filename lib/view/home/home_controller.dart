@@ -74,7 +74,15 @@ class HomeController extends GetxController {
     socket.listen((event) {
       Uint8List list = decodeProtocBufferData(event);
       BaseRequestProto proto = BaseRequestProto.fromBuffer(list);
-      LogI('收到：${proto.reqMsg}');
+      if (LoginState.success.code == proto.msgCode) {
+        Fluttertoast.showToast(msg: proto.reqMsg);
+      } else if (LoginState.nonAuth.code == proto.msgCode) {
+        Fluttertoast.showToast(msg: proto.reqMsg);
+        Get.offAndToNamed(AppRoutes.login);
+      } else {
+        Fluttertoast.showToast(msg: proto.msgCode.toString());
+      }
+      LogI('收到：${proto.reqMsg} ${proto.msgCode} ${proto.type}');
     });
   }
 

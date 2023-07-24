@@ -19,6 +19,8 @@ class SignInController extends GetxController {
     if (resp.code == 0 && resp.data != null) {
       StoreUtil.store.write('userInfo', resp.data);
       Get.offAndToNamed(AppRoutes.home);
+    } else {
+      return resp.message;
     }
   }
 
