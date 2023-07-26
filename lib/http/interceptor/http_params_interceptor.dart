@@ -26,7 +26,7 @@ class HttpParamsInterceptor extends Interceptor {
 
       /// 开始读取token
       UserInfo info = StoreUtil.store.read('userInfo');
-      if (null == info && info.token.isEmpty) {
+      if (null == info && info.token == null || info.token == '') {
         Fluttertoast.showToast(msg: '没有登录！');
         return;
       }

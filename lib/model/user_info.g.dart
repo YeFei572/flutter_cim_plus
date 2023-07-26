@@ -7,13 +7,14 @@ part of 'user_info.dart';
 // **************************************************************************
 
 UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
-      json['id'] as num,
-      json['phone'] as String,
-      json['token'] as String,
-      json['nickname'] as String,
-      json['gender'] as int,
-      json['remark'] as String?,
-      json['routeInfo'] == null
+      id: json['id'] as num?,
+      phone: json['phone'] as String?,
+      token: json['token'] as String?,
+      nickname: json['nickname'] as String? ?? '',
+      gender: json['gender'] as int?,
+      avatar: json['avatar'] as String? ?? '',
+      remark: json['remark'] as String?,
+      routeInfo: json['routeInfo'] == null
           ? null
           : RouteInfo.fromJson(json['routeInfo'] as Map<String, dynamic>),
     );
@@ -24,6 +25,7 @@ Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
       'token': instance.token,
       'nickname': instance.nickname,
       'gender': instance.gender,
+      'avatar': instance.avatar,
       'remark': instance.remark,
       'routeInfo': instance.routeInfo,
     };

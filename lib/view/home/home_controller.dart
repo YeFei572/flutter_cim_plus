@@ -70,7 +70,7 @@ class HomeController extends GetxController {
     socket = await Socket.connect(
         info.routeInfo?.ip, info.routeInfo!.serverPort ?? 17592);
     LogD('准备发起socket链接并进行鉴权');
-    sendMsg(info.id, info.token, MsgType.loginMsg);
+    sendMsg(info.id ?? 0, info.token ?? '', MsgType.loginMsg);
     socket.listen((event) {
       Uint8List list = decodeProtocBufferData(event);
       BaseRequestProto proto = BaseRequestProto.fromBuffer(list);

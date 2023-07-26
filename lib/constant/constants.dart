@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 class Constant {
-  static const String baseUrl = 'http://159.75.253.90:15793';
+  static const String baseUrl = 'http://192.168.31.176:17593';
+  // static const String baseUrl = 'http://159.75.253.90:15793';
 
   /// 运行忽略请求头的地址
   static const List<String> ignorePath = [

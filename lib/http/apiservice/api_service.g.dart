@@ -13,7 +13,6 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    // baseUrl ??= 'http://159.75.253.90:17593';
     baseUrl ??= 'http://192.168.31.176:17593';
   }
 
@@ -82,7 +81,7 @@ class _ApiService implements ApiService {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<FriendInfo>(Options(
       method: 'GET',

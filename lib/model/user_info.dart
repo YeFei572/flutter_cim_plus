@@ -5,16 +5,24 @@ part 'user_info.g.dart';
 
 @JsonSerializable()
 class UserInfo {
-  late num id;
-  late String phone;
-  late String token;
-  late String nickname;
-  late int gender;
+  num? id;
+  String? phone;
+  String? token;
+  String nickname;
+  int? gender;
+  String avatar;
   String? remark;
   RouteInfo? routeInfo;
 
-  UserInfo(this.id, this.phone, this.token, this.nickname, this.gender,
-      this.remark, this.routeInfo);
+  UserInfo(
+      {this.id,
+      this.phone,
+      this.token,
+      this.nickname = '',
+      this.gender,
+      this.avatar = '',
+      this.remark,
+      this.routeInfo});
 
   factory UserInfo.fromJson(Map<String, dynamic> json) =>
       _$UserInfoFromJson(json);

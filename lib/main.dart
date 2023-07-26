@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/route/route.dart';
+import 'package:flutter_cim_plus/store/UserStore.dart';
 import 'package:flutter_cim_plus/style/index.dart';
 import 'package:flutter_cim_plus/utils/database_helper.dart';
 import 'package:flutter_cim_plus/utils/sotre_util.dart';
@@ -23,6 +24,9 @@ void main() async {
   if (res != null && res['token'].toString().isNotEmpty) {
     loginFlag = true;
   }
+
+  /// 初始化用户信息
+  Get.put<UserStore>(UserStore());
 
   /// 初始化本地数据库
   DatabaseHelper.initializeDatabase();

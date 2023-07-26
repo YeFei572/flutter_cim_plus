@@ -1,4 +1,5 @@
 import 'package:flutter_cim_plus/model/base_entity.dart';
+import 'package:flutter_cim_plus/store/UserStore.dart';
 import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ class SignInController extends GetxController {
     BaseEntity<UserInfo> resp = await ApiService().login(loginData);
     if (resp.code == 0 && resp.data != null) {
       StoreUtil.store.write('userInfo', resp.data);
+      UserStore.to.updateInfo(resp.data!);
       Get.offAndToNamed(AppRoutes.home);
     } else {
       return resp.message;

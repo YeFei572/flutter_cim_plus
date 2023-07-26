@@ -7,7 +7,7 @@ class StoreUtil {
 
   static Future<UserInfo?> loadInfo() async {
     // Map<String, dynamic>? res = store.read('userInfo');
-    dynamic temp = store.read('userInfo');
+    dynamic temp = await store.read('userInfo');
     if (null == temp) {
       return null;
     }
