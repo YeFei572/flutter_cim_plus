@@ -11,30 +11,30 @@ on:
   pull_request:
     branches: [ "master" ]
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      # 创建java环境
+      - uses: actions/checkout@v2
+       # 创建 java 环境
       - name: Setup Java JDK
         uses: actions/setup-java@v1.3.0
         with:
           java-version: "8.x"
-      # 创建flutter环境
+      # 创建 Flutter 环境
       - name: Flutter action
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v1.1.1
         with:
           flutter-version: '3.10.5'
           channel: 'stable'
-      # 开始下载依赖
+       # 下载项目依赖
       - run: flutter pub get
-      # 开始进行打包
       - run: flutter build apk --target-platform android-arm
-      # 发布到Relase上去
-      - name: Relase apk
+      # 发布到 Release
+      - name: Release apk
         uses: ncipollo/release-action@v1.5.0
         with:
           artifacts: "build/app/outputs/apk/release/*.apk"
-          token: ${{ secrets.ACTION_TOKEN }} 
+          token: ${{ secrets.ACTION_TOKEN }}
