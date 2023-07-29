@@ -21,7 +21,6 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: '11'
       # 创建flutter环境
       - name: Flutter action
