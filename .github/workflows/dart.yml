@@ -33,7 +33,7 @@ jobs:
           channel: 'stable'
        # 下载项目依赖
       - run: flutter pub get
-      - run: flutter build apk --release --split-per-abi
+      - run: flutter build apk 
       # 发布到 Release
       - name: Release apk
         uses: ncipollo/release-action@v1.5.0
