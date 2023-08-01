@@ -1,5 +1,6 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_cim_plus/widget/net_image_cached.dart';
 import 'package:get/get.dart';
 
@@ -36,9 +37,17 @@ class FriendPage extends GetView<FriendController> {
           child: ListView.separated(
             itemBuilder: (item, index) {
               FriendInfo info = controller.friendList[index];
-              return ListTile(
-                leading: netImageCached(info.avatar!),
-                title: Text(info.remark ??= info.nickname ?? ''),
+              return Bounce(
+                duration: const Duration(milliseconds: 100),
+                onPressed: () => Get.toNamed(AppRoutes.chatDetail, parameters: {
+                  'id': info.userId == null ? '' : info.userId.toString(),
+                  'avatar': info.avatar ?? '',
+                  'title': info.nickname ?? '',
+                }),
+                child: ListTile(
+                  leading: netImageCached(info.avatar!),
+                  title: Text(info.remark ??= info.nickname ?? ''),
+                ),
               );
             },
             separatorBuilder: (_, index) => const Divider(),

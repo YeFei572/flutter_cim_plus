@@ -19,4 +19,7 @@ class AppRoutes {
 
   /// 我的
   static const mine = '/mine';
+
+  /// 聊天详情
+  static const chatDetail = '/chatDetail';
 }
