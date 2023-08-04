@@ -27,7 +27,7 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.12'
+          flutter-version: '3.10.5'
           channel: 'stable'
        # 下载项目依赖
       - run: flutter pub get
