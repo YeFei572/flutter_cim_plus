@@ -23,6 +23,9 @@ class DatabaseHelper {
   /// targetId：对象id，可以是用户id，群id
   /// targetName: 对象名称，可以是用户名称，群名称
   /// avatar： 头像
+  /// fromId: 消息所属用户id
+  /// fromName: 消息所属用户的昵称
+  /// fromAvatar: 消息所属用户的头像
   /// content：消息内容
   /// msgType：消息类型
   /// createTime：消息创建时间
@@ -37,6 +40,9 @@ class DatabaseHelper {
           targetId INTEGER NOT NULL,
           targetName TEXT NOT NULL,
           avatar TEXT,
+          fromId INTEGER NOT NULL,
+          fromName TEXT NOT NULL,
+          fromAvatar TEXT,
           content TEXT NOT NULL,
           msgType INTEGER NOT NULL,
           createTime INTEGER NOT NULL,
@@ -58,7 +64,7 @@ class DatabaseHelper {
     final db = await database;
     // 插入普通聊天记录
     await db.insert('chat_records', record.toJson());
-    record.logicType = LogicType.friend.code;
+    record.logicType = LogicType.normal.code;
     // 删除旧的逻辑数据并插入新的数据
     await db.delete('chat_records',
         where: 'targetId = ? and logicType = ?',
@@ -76,8 +82,8 @@ class DatabaseHelper {
       whereArgs: [
         logicType,
       ],
-      orderBy: 'createTime desc',
-      limit: page,
+      orderBy: 'createTime asc',
+      limit: size,
       offset: (page - 1) * size,
     );
     return List.generate(
@@ -93,10 +99,12 @@ class DatabaseHelper {
         whereArgs: [
           userId,
         ],
-        orderBy: 'createTime desc',
-        limit: page,
+        orderBy: 'createTime ASC',
+        limit: size,
         offset: (page - 1) * size);
     return List.generate(
-        maps.length, (index) => ChatRecord.fromJson(maps[index]));
+      maps.length,
+      (index) => ChatRecord.fromJson(maps[index]),
+    );
   }
 }

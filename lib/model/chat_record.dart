@@ -6,6 +6,9 @@ part 'chat_record.g.dart';
 /// targetId：对象id，可以是用户id，群id
 /// targetName: 对象名称，可以是用户名称，群名称
 /// avatar： 头像
+/// fromId: 消息所属用户id
+/// fromName: 消息所属用户的昵称
+/// fromAvatar: 消息所属用户的头像
 /// content：消息内容
 /// msgType：消息类型
 /// createTime：消息创建时间
@@ -21,6 +24,12 @@ class ChatRecord {
 
   String? avatar;
 
+  int? fromId;
+
+  String? fromName;
+
+  String? fromAvatar;
+
   String? content;
 
   int? msgType;
@@ -35,6 +44,9 @@ class ChatRecord {
     this.id,
     this.targetId,
     this.targetName,
+    this.fromId,
+    this.fromName,
+    this.fromAvatar,
     this.avatar,
     this.content,
     this.msgType,

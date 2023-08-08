@@ -1,5 +1,6 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
+import 'package:flutter_cim_plus/route/route.dart';
 import 'package:flutter_cim_plus/utils/database_helper.dart';
 import 'package:get/get.dart';
 
@@ -38,8 +39,20 @@ class ChatController extends GetxController {
   }
 
   Future<void> initChatRecords(int logicType) async {
+    chatList.clear();
     List<ChatRecord> chats =
         await DatabaseHelper().getRecordList(page, size, logicType);
     chatList.addAll(chats);
+  }
+
+  Future<void> toDetail(ChatRecord record) async {
+    Get.toNamed(
+      AppRoutes.chatDetail,
+      parameters: {
+        'id': record.targetId == null ? '' : record.targetId.toString(),
+        'avatar': record.avatar ?? '',
+        'title': record.targetName ?? '',
+      },
+    );
   }
 }
