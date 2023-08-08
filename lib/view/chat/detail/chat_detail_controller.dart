@@ -50,6 +50,5 @@ class ChatDetailController extends GetxController {
       logicType: LogicType.normal.code,
     );
     await DatabaseHelper().insertRecord(record);
-    // 插入成功，并获取最新用户的数据
   }
 }
