@@ -16,7 +16,7 @@ class ChatDetailPage extends GetView<ChatDetailController> {
       body: GetX<ChatDetailController>(
         builder: (controller) => Chat(
           messages: controller.messages,
-          onSendPressed: (msg) {},
+          onSendPressed: (v) => controller.sendMsg(v),
           user: controller.target.value,
         ),
       ),

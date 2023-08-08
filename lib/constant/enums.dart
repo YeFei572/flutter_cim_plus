@@ -14,6 +14,16 @@ enum MsgType {
   const MsgType(this.code, this.msg);
 }
 
+/// 聊天类型
+enum ChatType {
+  p2p(1, '私聊'),
+  group(2, '群聊');
+
+  final int code;
+  final String msg;
+  const ChatType(this.code, this.msg);
+}
+
 /// 消息的逻辑类型
 enum LogicType {
   friend(1, '单个用户的内部聊天记录'),

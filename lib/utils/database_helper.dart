@@ -83,4 +83,20 @@ class DatabaseHelper {
     return List.generate(
         maps.length, (index) => ChatRecord.fromJson(maps[index]));
   }
+
+  /// 获取指定用户的对话记录
+  Future<List<ChatRecord>> getConversionList(
+      int page, int size, int userId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('chat_records',
+        where: 'logicType = 1 and targetId = ?',
+        whereArgs: [
+          userId,
+        ],
+        orderBy: 'createTime desc',
+        limit: page,
+        offset: (page - 1) * size);
+    return List.generate(
+        maps.length, (index) => ChatRecord.fromJson(maps[index]));
+  }
 }
