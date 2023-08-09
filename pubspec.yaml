@@ -30,7 +30,7 @@ dependencies:
   sqflite: ^2.2.8+4
   # 使Ink没有水波纹
   flutter_bounce: ^1.1.0
-  flutter_chat_ui: ^1.6.9
+  scrollview_observer: ^1.15.0
   path:
 dev_dependencies:
   flutter_test:
