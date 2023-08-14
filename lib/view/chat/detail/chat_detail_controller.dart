@@ -1,22 +1,24 @@
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_cim_plus/constant/enums.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
+import 'package:flutter_cim_plus/model/user_info.dart';
 import 'package:flutter_cim_plus/store/UserStore.dart';
-import 'package:flutter_cim_plus/utils/database_helper.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:get/get.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
+
+import '../../../constant/enums.dart';
+import '../../../utils/database_helper.dart';
 
 class ChatDetailController extends GetxController {
   ChatDetailController();
 
+  ScrollController scrollController = ScrollController();
+  late ListObserverController observerController;
+  late ChatScrollObserver chatObserver;
   RxString rxTitle = ''.obs;
-  final messages = <types.Message>[].obs;
-  Rx<types.User> target = Rx<types.User>(
-    types.User(
-      id: Get.parameters['id'] ?? '',
-      imageUrl: Get.parameters['avatar'] ?? '',
-    ),
-  );
+  RxInt rxUserId = 0.obs;
+  RxString rxAvatar = ''.obs;
+  final messages = <ChatRecord>[].obs;
 
   int page = 1;
   int size = 20;
@@ -25,43 +27,38 @@ class ChatDetailController extends GetxController {
   void onInit() {
     super.onInit();
     rxTitle.value = Get.parameters['title'] ?? '';
+    rxAvatar.value = Get.parameters['avatar'] ?? '';
+    rxUserId.value = Get.parameters['id'] == null
+        ? 0
+        : int.parse(Get.parameters['id'].toString());
     LogI('title is : ${rxTitle.value}');
     // 初始化当前用户的聊天记录
+    messages.clear();
     getConversion();
   }
 
   Future<void> getConversion() async {
-    List<ChatRecord> records = await DatabaseHelper()
-        .getConversionList(page, size, int.parse(target.value.id));
-    for (var item in records) {
-      types.TextMessage msg = types.TextMessage(
-        id: item.id.toString(),
-        author: types.User(
-          id: item.id.toString(),
-          imageUrl: item.fromAvatar,
-        ),
-        type: types.MessageType.text,
-        text: item.content ?? '',
-      );
-      messages.add(msg);
-    }
+    List<ChatRecord> records =
+        await DatabaseHelper().getConversionList(page, size, rxUserId.value);
+    messages.addAll(records);
   }
 
-  Future<void> sendMsg(types.PartialText msg) async {
+  Future<void> sendMsg(String msg) async {
+    UserInfo me = UserStore.to.info;
     ChatRecord record = ChatRecord(
-      avatar: target.value.imageUrl,
-      targetId: int.parse(target.value.id),
+      avatar: rxAvatar.value,
+      targetId: rxUserId.value,
       targetName: rxTitle.value,
-      content: msg.text,
-      fromId: int.tryParse(UserStore.to.info.id.toString()),
-      fromName: UserStore.to.info.nickname,
-      fromAvatar: UserStore.to.info.avatar,
+      content: msg,
+      fromId: int.tryParse(me.id.toString()),
+      fromName: me.nickname,
+      fromAvatar: me.avatar,
       msgType: MsgType.txtMsg.code,
       chatType: ChatType.p2p.code,
       createTime: DateTime.now().second,
       logicType: LogicType.friend.code,
     );
     await DatabaseHelper().insertRecord(record);
-    getConversion();
+    messages.add(record);
   }
 }

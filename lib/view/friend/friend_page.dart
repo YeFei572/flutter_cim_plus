@@ -39,11 +39,12 @@ class FriendPage extends GetView<FriendController> {
               FriendInfo info = controller.friendList[index];
               return Bounce(
                 duration: const Duration(milliseconds: 100),
-                onPressed: () => Get.toNamed(AppRoutes.chatDetail, parameters: {
-                  'id': info.userId == null ? '' : info.userId.toString(),
-                  'avatar': info.avatar ?? '',
-                  'title': info.nickname ?? '',
-                }),
+                onPressed: () => controller.toDetail(info),
+                // onPressed: () => Get.toNamed(AppRoutes.chatDetail, parameters: {
+                //   'id': info.userId == null ? '' : info.userId.toString(),
+                //   'avatar': info.avatar ?? '',
+                //   'title': info.nickname ?? '',
+                // }),
                 child: ListTile(
                   leading: netImageCached(info.avatar!),
                   title: Text(info.remark ??= info.nickname ?? ''),

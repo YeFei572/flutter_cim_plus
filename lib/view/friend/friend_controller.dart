@@ -5,6 +5,7 @@ import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:get/get.dart';
 
 import '../../model/friend_info.dart';
+import '../chat/detail/chat_view.dart';
 
 class FriendController extends GetxController {
   FriendController();
@@ -31,5 +32,15 @@ class FriendController extends GetxController {
   void onClose() {
     refreshController.dispose();
     super.onClose();
+  }
+
+  Future<void> toDetail(FriendInfo info) async {
+    Get.to(
+      () => ChatView(
+        id: info.userId.toString(),
+        avatar: info.avatar ?? '',
+        title: info.nickname ?? '',
+      ),
+    );
   }
 }

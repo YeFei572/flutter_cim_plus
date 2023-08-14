@@ -1,7 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
-import 'package:flutter_cim_plus/route/route.dart';
 import 'package:flutter_cim_plus/utils/database_helper.dart';
+import 'package:flutter_cim_plus/view/chat/detail/chat_view.dart';
 import 'package:get/get.dart';
 
 import '../../constant/enums.dart';
@@ -46,13 +46,20 @@ class ChatController extends GetxController {
   }
 
   Future<void> toDetail(ChatRecord record) async {
-    Get.toNamed(
-      AppRoutes.chatDetail,
-      parameters: {
-        'id': record.targetId == null ? '' : record.targetId.toString(),
-        'avatar': record.avatar ?? '',
-        'title': record.targetName ?? '',
-      },
+    Get.to(
+      () => ChatView(
+        id: record.targetId.toString(),
+        avatar: record.avatar ?? '',
+        title: record.targetName ?? '',
+      ),
     );
+    // Get.toNamed(
+    //   AppRoutes.chatDetail,
+    //   parameters: {
+    //     'id': record.targetId == null ? '' : record.targetId.toString(),
+    //     'avatar': record.avatar ?? '',
+    //     'title': record.targetName ?? '',
+    //   },
+    // );
   }
 }

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cim_plus/constant/constants.dart';
+import 'package:flutter_cim_plus/http/dio_client.dart';
 import 'package:flutter_cim_plus/route/route.dart';
 import 'package:flutter_cim_plus/store/UserStore.dart';
 import 'package:flutter_cim_plus/style/index.dart';
@@ -80,6 +82,7 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> initNetwork() async {
+  DioClient.initClient(baseUrl: Constant.baseUrl);
   // final List<Interceptor> interceptors = <Interceptor>[];
   //
   // /// 统一添加身份验证请求头
