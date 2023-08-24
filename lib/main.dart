@@ -12,7 +12,6 @@ import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-// import 'http/http.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

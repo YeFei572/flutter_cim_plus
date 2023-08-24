@@ -1,3 +1,4 @@
+import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -99,12 +100,25 @@ class DatabaseHelper {
         whereArgs: [
           userId,
         ],
-        orderBy: 'createTime ASC',
+        orderBy: 'createTime DESC',
         limit: size,
         offset: (page - 1) * size);
     return List.generate(
       maps.length,
       (index) => ChatRecord.fromJson(maps[index]),
     );
+  }
+
+  /// 清除指定目标的消息记录
+  Future<void> cleanMsg(int userId) async {
+    final db = await database;
+    int num = await db.delete(
+      'chat_records',
+      where: 'targetId = ?',
+      whereArgs: [
+        userId,
+      ],
+    );
+    LogI("清除消息成功！清除消息条数：$num");
   }
 }

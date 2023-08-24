@@ -27,7 +27,6 @@ class _ChatViewState extends State<ChatView> {
   int page = 1;
   int size = 50;
   ScrollController scrollController = ScrollController();
-  final EasyRefreshController _refreshController = EasyRefreshController();
   late ListObserverController observerController;
   late ChatScrollObserver chatObserver;
   List<ChatRecord> records = [];
@@ -38,6 +37,8 @@ class _ChatViewState extends State<ChatView> {
     super.initState();
 
     /// todo 加载历史聊天记录
+    _refreshMsg();
+
     /// 初始化各种属性
     scrollController.addListener(() {
       if (scrollController.offset < 50) {
@@ -59,7 +60,6 @@ class _ChatViewState extends State<ChatView> {
   void dispose() {
     observerController.controller?.dispose();
     editViewController.dispose();
-    _refreshController.dispose();
     super.dispose();
   }
 
@@ -79,9 +79,10 @@ class _ChatViewState extends State<ChatView> {
       fromAvatar: me.avatar,
       msgType: MsgType.txtMsg.code,
       chatType: ChatType.p2p.code,
-      createTime: DateTime.now().second,
+      createTime: DateTime.now().millisecondsSinceEpoch,
       logicType: LogicType.friend.code,
     );
+    chatObserver.standby(changeCount: 1);
     setState(() {
       records = [record, ...records];
     });
@@ -90,13 +91,26 @@ class _ChatViewState extends State<ChatView> {
   }
 
   _loadMsg() async {
+    debugPrint("---loadMsg----");
+  }
+
+  _refreshMsg() async {
+    debugPrint("开始加载本地历史消息....");
     page = 1;
     List<ChatRecord> res = await DatabaseHelper()
-        .getConversionList(page, size, UserStore.to.info.id!.toInt());
-    records.clear();
-    setState(() {
-      records = res;
+        .getConversionList(page, size, int.parse(widget.id));
+    chatObserver.standby(changeCount: res.length);
+    setState(() => records = res);
+
+    /// 打印一下当前列表的数据
+    res.forEach((e) {
+      debugPrint('当前索引：${e.createTime}, 当前消息内容：${e.content}');
     });
+  }
+
+  _cleanMsg() async {
+    await DatabaseHelper().cleanMsg(int.parse(widget.id));
+    _refreshMsg();
   }
 
   @override
@@ -107,6 +121,12 @@ class _ChatViewState extends State<ChatView> {
         backgroundColor: const Color(0xff2b2b2b),
         title: Text(widget.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.clean_hands),
+            onPressed: () => _cleanMsg(),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -121,46 +141,58 @@ class _ChatViewState extends State<ChatView> {
     /// 获取当前用户的id
     String currentId = UserStore.to.info.id.toString();
     return LayoutBuilder(
-        builder: (BuildContext ctx, BoxConstraints constraints) {
+        builder: (BuildContext context, BoxConstraints constraints) {
+      Widget resultWidget = EasyRefresh.builder(
+        header: const CupertinoHeader(),
+        footer: const CupertinoFooter(
+          position: IndicatorPosition.above,
+          infiniteOffset: null,
+        ),
+        onLoad: () => _loadMsg(),
+        onRefresh: () => _refreshMsg(),
+        childBuilder: (context, physics) {
+          // 新增的代码
+          var listViewPhysics =
+              physics.applyTo(ChatObserverClampingScrollPhysics(
+            observer: chatObserver,
+          ));
+          if (chatObserver.isShrinkWrap) {
+            listViewPhysics =
+                const NeverScrollableScrollPhysics().applyTo(listViewPhysics);
+          }
+          Widget resultWidget1 = ListView.builder(
+            physics: listViewPhysics,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            shrinkWrap: chatObserver.isShrinkWrap,
+            reverse: true,
+            controller: scrollController,
+            itemBuilder: (context, index) {
+              return MessageItem(
+                chatRecord: records[index],
+                isOwn: currentId == records[index].fromId.toString(),
+              );
+            },
+            itemCount: records.length,
+          );
+          if (chatObserver.isShrinkWrap) {
+            resultWidget1 = SingleChildScrollView(
+              reverse: true,
+              physics: physics,
+              child: Container(
+                alignment: Alignment.topCenter,
+                height: constraints.maxHeight + 0.001,
+                child: resultWidget1,
+              ),
+            );
+          }
+          return resultWidget1;
+        },
+      );
       return Align(
         alignment: Alignment.topCenter,
         child: ListViewObserver(
           controller: observerController,
-          child: EasyRefresh.builder(
-            controller: _refreshController,
-            header: const ClassicHeader(),
-            footer: const ClassicFooter(),
-            onRefresh: () => _loadMsg(),
-            childBuilder: (ctx, physics) {
-              Widget result = ListView.builder(
-                physics: physics.applyTo(
-                  ChatObserverClampingScrollPhysics(observer: chatObserver),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                shrinkWrap: chatObserver.isShrinkWrap,
-                reverse: true,
-                controller: scrollController,
-                itemBuilder: (ctx, index) => MessageItem(
-                  chatRecord: records[index],
-                  isOwn: currentId == records[index].fromId.toString(),
-                ),
-                itemCount: records.length,
-              );
-              if (chatObserver.isShrinkWrap) {
-                result = SingleChildScrollView(
-                  reverse: true,
-                  physics: physics,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    height: constraints.maxHeight + 0.001,
-                    child: result,
-                  ),
-                );
-              }
-              return result;
-            },
-          ),
+          child: resultWidget,
         ),
       );
     });
