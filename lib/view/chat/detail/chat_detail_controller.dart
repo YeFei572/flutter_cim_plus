@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
 import 'package:flutter_cim_plus/model/user_info.dart';
-import 'package:flutter_cim_plus/store/UserStore.dart';
+import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:get/get.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';

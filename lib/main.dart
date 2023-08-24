@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/constant/constants.dart';
 import 'package:flutter_cim_plus/http/dio_client.dart';
 import 'package:flutter_cim_plus/route/route.dart';
-import 'package:flutter_cim_plus/store/UserStore.dart';
+import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/style/index.dart';
 import 'package:flutter_cim_plus/utils/database_helper.dart';
 import 'package:flutter_cim_plus/utils/sotre_util.dart';

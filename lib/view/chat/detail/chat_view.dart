@@ -1,6 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cim_plus/store/UserStore.dart';
+import 'package:flutter_cim_plus/store/chat_store.dart';
+import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -86,7 +87,7 @@ class _ChatViewState extends State<ChatView> {
     setState(() {
       records = [record, ...records];
     });
-    await DatabaseHelper().insertRecord(record);
+    ChatStore.to.sendMsg(record);
     editViewController.clear();
   }
 
@@ -101,11 +102,6 @@ class _ChatViewState extends State<ChatView> {
         .getConversionList(page, size, int.parse(widget.id));
     chatObserver.standby(changeCount: res.length);
     setState(() => records = res);
-
-    /// 打印一下当前列表的数据
-    res.forEach((e) {
-      debugPrint('当前索引：${e.createTime}, 当前消息内容：${e.content}');
-    });
   }
 
   _cleanMsg() async {
@@ -201,6 +197,7 @@ class _ChatViewState extends State<ChatView> {
   Widget _buildInputWidget() {
     return Container(
       padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 5),
       decoration: const BoxDecoration(
         color: Color(0xff2b2b2b),
         borderRadius: BorderRadius.only(

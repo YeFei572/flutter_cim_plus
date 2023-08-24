@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
+import 'package:flutter_cim_plus/widget/net_image_cached.dart';
 
 class MessageItem extends StatelessWidget {
   const MessageItem({
@@ -19,13 +20,25 @@ class MessageItem extends StatelessWidget {
         textDirection: isOwn ? TextDirection.rtl : TextDirection.ltr,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: isOwn ? Colors.blue : Colors.white30,
-            ),
+          // Container(
+          //   width: 40,
+          //   height: 40,
+          //   decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.circular(20),
+          //     color: isOwn ? Colors.blue : Colors.white30,
+          //   ),
+          // ),
+          CircleAvatar(
+            child: chatRecord.fromAvatar == null
+                ? Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  )
+                : netImageCached(chatRecord.fromAvatar!),
           ),
           const SizedBox(width: 10),
           Container(

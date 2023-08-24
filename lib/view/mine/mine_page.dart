@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cim_plus/store/UserStore.dart';
+import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/view/mine/mine_controller.dart';
 import 'package:flutter_cim_plus/widget/net_image_cached.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

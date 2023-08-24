@@ -7,6 +7,7 @@ import 'package:flutter_cim_plus/widget/net_image_cached.dart';
 import 'package:get/get.dart';
 
 import '../../constant/enums.dart';
+import '../../store/chat_store.dart';
 
 class ChatPage extends GetView<ChatController> {
   const ChatPage({super.key});
@@ -31,7 +32,7 @@ class ChatPage extends GetView<ChatController> {
   Widget _buildFriendItems() {
     return ListView.separated(
       itemBuilder: (_, index) {
-        ChatRecord record = controller.chatList[index];
+        ChatRecord record = ChatStore.to.chatList[index];
         return Bounce(
           duration: const Duration(milliseconds: 200),
           onPressed: () => controller.toDetail(record),
@@ -43,7 +44,7 @@ class ChatPage extends GetView<ChatController> {
         );
       },
       separatorBuilder: (_, index) => const Divider(),
-      itemCount: controller.chatList.length,
+      itemCount: ChatStore.to.chatList.length,
     );
   }
 }

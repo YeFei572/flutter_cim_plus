@@ -1,5 +1,5 @@
 import 'package:flutter_cim_plus/model/base_entity.dart';
-import 'package:flutter_cim_plus/store/UserStore.dart';
+import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:get/get.dart';

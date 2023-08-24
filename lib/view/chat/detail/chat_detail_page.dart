@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
-import 'package:flutter_cim_plus/store/UserStore.dart';
+import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/view/chat/detail/chat_detail_controller.dart';
 import 'package:get/get.dart';
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/proto/RequestProto.pb.dart';
 import 'package:flutter_cim_plus/route/names.dart';
+import 'package:flutter_cim_plus/store/chat_store.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
 import 'package:flutter_cim_plus/utils/sotre_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,6 +59,8 @@ class HomeController extends GetxController {
     pageController = PageController(initialPage: page.value);
     // 初始化socket的信息
     initSocket();
+    // 初始化会话store
+    Get.put<ChatStore>(ChatStore());
   }
 
   Future<void> initSocket() async {
