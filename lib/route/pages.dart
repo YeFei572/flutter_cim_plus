@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cim_plus/route/names.dart';
-import 'package:flutter_cim_plus/view/chat/detail/chat_detail_bindings.dart';
-import 'package:flutter_cim_plus/view/chat/detail/chat_detail_page.dart';
 import 'package:flutter_cim_plus/view/discover/discover_page.dart';
 import 'package:flutter_cim_plus/view/home/home_bindings.dart';
 import 'package:flutter_cim_plus/view/home/home_page.dart';
@@ -65,11 +63,6 @@ class AppPages {
       name: AppRoutes.mine,
       page: () => const MinePage(),
       binding: MineBindings(),
-    ),
-    GetPage(
-      name: AppRoutes.chatDetail,
-      page: () => const ChatDetailPage(),
-      binding: ChatDetailBindings(),
     ),
   ];
 }

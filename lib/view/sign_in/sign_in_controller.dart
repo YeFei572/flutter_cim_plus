@@ -11,7 +11,7 @@ import '../../route/route.dart';
 class SignInController extends GetxController {
   late String title = 'CIM-PLUS';
 
-  Future<String?>? login(LoginData data) async {
+  Future<String?> login(LoginData data) async {
     final Map<String, String> loginData = {
       'phone': data.name,
       'password': data.password
@@ -21,9 +21,14 @@ class SignInController extends GetxController {
       StoreUtil.store.write('userInfo', resp.data);
       UserStore.to.updateInfo(resp.data!);
       Get.offAndToNamed(AppRoutes.home);
+      return null;
     } else {
       return resp.message;
     }
+  }
+
+  Future<String?> recoverPwd(String recoverPwd) async {
+    return null;
   }
 
   validate(name) {

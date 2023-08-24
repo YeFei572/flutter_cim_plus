@@ -20,24 +20,31 @@ class HttpParamsInterceptor extends Interceptor {
   static const APP_ID = "test_android";
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     if (!Constant.ignorePath.contains(options.path)) {
       Map<String, dynamic> headers = options.headers;
 
       /// 开始读取token
-      UserInfo info = StoreUtil.store.read('userInfo');
-      if (null == info && info.token == null || info.token == '') {
-        Fluttertoast.showToast(msg: '没有登录！');
-        return;
-      }
-      headers = {'cim-plus': info.token};
-      options.headers.addAll(headers);
+      // UserInfo info = StoreUtil.store.read('userInfo');
+      getToken().then((token) {
+        if (token.isEmpty) {
+          Fluttertoast.showToast(msg: '没有登录！');
+          return;
+        }
+        headers = {'cim-plus': token};
+        options.headers.addAll(headers);
+      });
     }
     super.onRequest(options, handler);
   }
 
-  @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
-    super.onResponse(response, handler);
+  Future<String> getToken() async {
+    final UserInfo? info = await StoreUtil.loadInfo();
+    if (null == info || info.token == null || info.token == '') {
+      Fluttertoast.showToast(msg: '没有登录！');
+      return '';
+    }
+    return info.token!;
   }
 }
