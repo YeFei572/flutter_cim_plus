@@ -197,7 +197,7 @@ class _ChatViewState extends State<ChatView> {
   Widget _buildInputWidget() {
     return Container(
       padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(bottom: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: const BoxDecoration(
         color: Color(0xff2b2b2b),
         borderRadius: BorderRadius.only(

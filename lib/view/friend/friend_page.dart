@@ -40,14 +40,12 @@ class FriendPage extends GetView<FriendController> {
               return Bounce(
                 duration: const Duration(milliseconds: 100),
                 onPressed: () => controller.toDetail(info),
-                // onPressed: () => Get.toNamed(AppRoutes.chatDetail, parameters: {
-                //   'id': info.userId == null ? '' : info.userId.toString(),
-                //   'avatar': info.avatar ?? '',
-                //   'title': info.nickname ?? '',
-                // }),
-                child: ListTile(
-                  leading: netImageCached(info.avatar!),
-                  title: Text(info.remark ??= info.nickname ?? ''),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  child: ListTile(
+                    leading: netImageCached(info.avatar!),
+                    title: Text(info.remark ??= info.nickname ?? ''),
+                  ),
                 ),
               );
             },

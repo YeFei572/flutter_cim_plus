@@ -1,4 +1,5 @@
 import 'package:flutter_cim_plus/constant/enums.dart';
+import 'package:flutter_cim_plus/http/apiservice/api_service.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
 import 'package:flutter_cim_plus/utils/database_helper.dart';
 import 'package:get/get.dart';
@@ -31,6 +32,13 @@ class ChatStore extends GetxController {
 
   /// 发送消息会话
   Future<void> sendMsg(ChatRecord record) async {
+    // 准备发送消息的参数
+    var p2pReq = {
+      'receiveUserId': record.targetId,
+      'msg': record.content,
+      'type': record.msgType
+    };
+    await ApiService().sendMsg(p2pReq);
     // 将数据插入到本地数据库
     await DatabaseHelper().insertRecord(record);
     // 更新会话列表

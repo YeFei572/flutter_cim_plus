@@ -24,4 +24,8 @@ abstract class ApiService {
 
   @GET('/friend/queryNewFriend/{phone}')
   Future<FriendInfo> queryNewFriend(@Path("phone") String phone);
+
+  /// 私聊发送消息
+  @POST('/chat/p2p')
+  Future<BaseEntity<bool>> sendMsg(@Body() Map<String, dynamic> p2pReq);
 }
