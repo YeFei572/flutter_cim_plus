@@ -96,8 +96,9 @@ class DatabaseHelper {
       int page, int size, int userId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('chat_records',
-        where: 'logicType = 1 and targetId = ?',
+        where: 'logicType = 1 and (targetId = ? or fromId = ?)',
         whereArgs: [
+          userId,
           userId,
         ],
         orderBy: 'createTime DESC',

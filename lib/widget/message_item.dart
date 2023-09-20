@@ -5,10 +5,14 @@ import 'package:flutter_cim_plus/widget/net_image_cached.dart';
 class MessageItem extends StatelessWidget {
   const MessageItem({
     Key? key,
+    required this.targetAvatar,
+    required this.myAvatar,
     required this.chatRecord,
     required this.isOwn,
   }) : super(key: key);
 
+  final String targetAvatar;
+  final String myAvatar;
   final ChatRecord chatRecord;
   final bool isOwn;
 
@@ -20,25 +24,9 @@ class MessageItem extends StatelessWidget {
         textDirection: isOwn ? TextDirection.rtl : TextDirection.ltr,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Container(
-          //   width: 40,
-          //   height: 40,
-          //   decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.circular(20),
-          //     color: isOwn ? Colors.blue : Colors.white30,
-          //   ),
-          // ),
           CircleAvatar(
-            child: chatRecord.fromAvatar == null
-                ? Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  )
-                : netImageCached(chatRecord.fromAvatar!),
+            child:
+                isOwn ? netImageCached(myAvatar) : netImageCached(targetAvatar),
           ),
           const SizedBox(width: 10),
           Container(

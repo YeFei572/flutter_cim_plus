@@ -164,6 +164,8 @@ class _ChatViewState extends State<ChatView> {
             controller: scrollController,
             itemBuilder: (context, index) {
               return MessageItem(
+                myAvatar: UserStore.to.info.avatar,
+                targetAvatar: widget.avatar,
                 chatRecord: records[index],
                 isOwn: currentId == records[index].fromId.toString(),
               );

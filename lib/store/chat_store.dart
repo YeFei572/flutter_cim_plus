@@ -45,4 +45,11 @@ class ChatStore extends GetxController {
     _chatList.clear();
     loadChatList(page, size, LogicType.normal.code);
   }
+
+  /// 监听消息记录
+  Future<void> receiveMsg(ChatRecord record) async {
+    await DatabaseHelper().insertRecord(record);
+    _chatList.clear();
+    loadChatList(page, size, LogicType.normal.code);
+  }
 }

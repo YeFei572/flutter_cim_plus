@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cim_plus/model/chat_record.dart';
 import 'package:flutter_cim_plus/proto/RequestProto.pb.dart';
 import 'package:flutter_cim_plus/route/names.dart';
 import 'package:flutter_cim_plus/store/chat_store.dart';
@@ -88,8 +89,21 @@ class HomeController extends GetxController {
         }
       } else {
         Fluttertoast.showToast(msg: proto.reqMsg);
+        ChatRecord record = ChatRecord(
+          targetId: info.id!.toInt(),
+          targetName: info.nickname,
+          fromId: proto.fromId.toInt(),
+          fromName: '',
+          fromAvatar: '',
+          avatar: info.avatar,
+          content: proto.reqMsg,
+          msgType: proto.type,
+          createTime: DateTime.now().millisecondsSinceEpoch,
+          chatType: proto.chatType,
+          logicType: LogicType.friend.code,
+        );
+        ChatStore.to.receiveMsg(record);
       }
-
       LogI(
           '收到：${proto.reqMsg} ${proto.msgCode} ${proto.type} ${proto.fromId} ${proto.receiveId}');
     });

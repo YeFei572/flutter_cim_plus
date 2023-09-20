@@ -24,21 +24,16 @@ class MinePage extends GetView<MineController> {
                   height: 100.w,
                 ),
                 SizedBox(width: 20.w),
-                Text(UserStore.to.info.nickname)
-                // Column(
-                //   children: [
-                // Text(controller.rxInfo!.value.nickname),
-                // controller.rxInfo!.value.gender == 1
-                //     ? const Icon(
-                //         Icons.person,
-                //         color: Colors.blue,
-                //       )
-                //     : const Icon(
-                //         Icons.person,
-                //         color: Colors.pink,
-                //       ),
-                //   ],
-                // )
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(UserStore.to.info.nickname),
+                    UserStore.to.info.gender == 1
+                        ? const Icon(Icons.person, color: Colors.blue)
+                        : const Icon(Icons.person, color: Colors.pink),
+                    Text('用户ID：${UserStore.to.info.id}')
+                  ],
+                )
               ],
             ),
           );
