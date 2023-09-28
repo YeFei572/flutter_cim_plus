@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cim_plus/store/chat_store.dart';
 import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
+import 'package:get/get.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import '../../../constant/enums.dart';
@@ -39,6 +40,16 @@ class _ChatViewState extends State<ChatView> {
 
     /// todo 加载历史聊天记录
     _refreshMsg();
+    // 动态加载用户聊天记录
+    ChatStore.to.rxReceiveList.listen((val) {
+      ChatRecord? record =
+          val.firstWhereOrNull((item) => item.uid == int.parse(widget.id));
+      if (record != null && record.fromId != UserStore.to.info.id) {
+        record.logicType = LogicType.friend.code;
+        chatObserver.standby(changeCount: 1);
+        setState(() => records = [record, ...records]);
+      }
+    });
 
     /// 初始化各种属性
     scrollController.addListener(() {

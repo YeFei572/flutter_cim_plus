@@ -8,6 +8,7 @@ import '../../store/chat_store.dart';
 
 class ChatController extends GetxController {
   ChatController();
+
   EasyRefreshController refreshController = EasyRefreshController();
   int page = 1;
   int size = 50;
@@ -25,11 +26,12 @@ class ChatController extends GetxController {
   }
 
   Future<void> toDetail(ChatRecord record) async {
+    bool isTarget = record.uid == record.targetId;
     Get.to(
       () => ChatView(
-        id: record.targetId.toString(),
-        avatar: record.avatar ?? '',
-        title: record.targetName ?? '',
+        id: record.uid.toString(),
+        avatar: isTarget ? record.avatar ?? '' : record.fromAvatar ?? '',
+        title: isTarget ? record.targetName ?? '' : record.fromName ?? '',
       ),
     );
   }

@@ -14,6 +14,8 @@ class ChatStore extends GetxController {
 
   List<ChatRecord> get chatList => _chatList;
 
+  RxList<ChatRecord> rxReceiveList = <ChatRecord>[].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -29,6 +31,7 @@ class ChatStore extends GetxController {
     List<ChatRecord> chats =
         await DatabaseHelper().getRecordList(page, size, logicType);
     _chatList.value = chats;
+    rxReceiveList.value = chats;
   }
 
   /// 发送消息会话
