@@ -1,6 +1,7 @@
 import 'package:flutter_cim_plus/constant/enums.dart';
 import 'package:flutter_cim_plus/http/apiservice/api_service.dart';
 import 'package:flutter_cim_plus/model/chat_record.dart';
+import 'package:flutter_cim_plus/model/friend_info.dart';
 import 'package:flutter_cim_plus/utils/database_helper.dart';
 import 'package:get/get.dart';
 
@@ -48,6 +49,17 @@ class ChatStore extends GetxController {
 
   /// 监听消息记录
   Future<void> receiveMsg(ChatRecord record) async {
+    // 从库里面获取对应的对象用户信息
+    if (record.chatType == ChatType.p2p.code) {
+      List<FriendInfo> existFriend =
+          await DatabaseHelper().getFriendList(uid: record.uid);
+      if (existFriend.isNotEmpty) {
+        FriendInfo info = existFriend[0];
+        record.fromId = info.userId;
+        record.fromName = info.nickname;
+        record.fromAvatar = info.avatar;
+      }
+    }
     await DatabaseHelper().insertRecord(record);
     _chatList.clear();
     loadChatList(page, size, LogicType.normal.code);

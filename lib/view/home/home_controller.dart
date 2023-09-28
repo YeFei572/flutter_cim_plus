@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:fixnum/fixnum.dart';
@@ -25,8 +26,10 @@ class HomeController extends GetxController {
 
   // 关于socket的常量
   late Socket socket;
-
+  bool isConnected = false;
+  final heartbeatInterval = 5000;
   RxInt page = 0.obs;
+  Timer? heartbeatTimer;
 
   /// 页控制器
   late final PageController pageController;
@@ -71,42 +74,108 @@ class HomeController extends GetxController {
       Get.offAndToNamed(AppRoutes.login);
       return;
     }
-    socket = await Socket.connect(
-        info.routeInfo?.ip, info.routeInfo!.serverPort ?? 17592);
-    LogD('准备发起socket链接并进行鉴权');
-    sendMsg(info.id ?? 0, info.token ?? '', MsgType.loginMsg);
-    socket.listen((event) {
-      Uint8List list = decodeProtocBufferData(event);
-      BaseRequestProto proto = BaseRequestProto.fromBuffer(list);
-      if (MsgType.loginMsg.code == proto.type) {
-        if (LoginState.success.code == proto.msgCode) {
-          Fluttertoast.showToast(msg: proto.reqMsg);
-        } else if (LoginState.nonAuth.code == proto.msgCode) {
-          Fluttertoast.showToast(msg: proto.reqMsg);
-          Get.offAndToNamed(AppRoutes.login);
-        } else {
-          Fluttertoast.showToast(msg: proto.reqMsg.toString());
-        }
+    try {
+      socket = await Socket.connect(
+          info.routeInfo?.ip, info.routeInfo!.serverPort ?? 17592);
+      LogD('准备发起socket链接并进行鉴权');
+      sendMsg(info.id ?? 0, info.token ?? '', MsgType.loginMsg);
+      socket.listen(
+        (event) {
+          Uint8List list = decodeProtocBufferData(event);
+          BaseRequestProto proto = BaseRequestProto.fromBuffer(list);
+          if (MsgType.loginMsg.code == proto.type) {
+            if (LoginState.success.code == proto.msgCode) {
+              // 设置连接状态为已连接
+              isConnected = true;
+              Fluttertoast.showToast(msg: proto.reqMsg);
+            } else if (LoginState.nonAuth.code == proto.msgCode) {
+              Fluttertoast.showToast(msg: proto.reqMsg);
+              Get.offAndToNamed(AppRoutes.login);
+            } else {
+              Fluttertoast.showToast(msg: proto.reqMsg.toString());
+            }
+          } else if (MsgType.heartbeat.code == proto.type) {
+            if (proto.reqMsg.toString() != 'PONG') {
+              Fluttertoast.showToast(msg: '检测连接已经断开啦,请尝试重新登录！');
+            }
+          } else {
+            Fluttertoast.showToast(msg: proto.reqMsg);
+            int uid = proto.fromId.toInt() == info.id!.toInt()
+                ? proto.receiveId.toInt()
+                : proto.fromId.toInt();
+            ChatRecord record = ChatRecord(
+              uid: uid,
+              targetId: info.id!.toInt(),
+              targetName: info.nickname,
+              fromId: proto.fromId.toInt(),
+              fromName: '',
+              fromAvatar: '',
+              avatar: info.avatar,
+              content: proto.reqMsg,
+              msgType: proto.type,
+              createTime: DateTime.now().millisecondsSinceEpoch,
+              chatType: proto.chatType,
+              logicType: LogicType.friend.code,
+            );
+            ChatStore.to.receiveMsg(record);
+            LogI(
+                '收到：${proto.reqMsg} ${proto.msgCode} ${proto.type} ${proto.fromId} ${proto.receiveId}');
+          }
+        },
+        onError: (error) {
+          Fluttertoast.showToast(msg: '发起连接失败，请联系客服！');
+        },
+        onDone: () {
+          disconnect();
+        },
+      );
+      // 启动心跳定时器
+      startHeartbeat();
+    } catch (e) {
+      debugPrint('发起连接失败：$e');
+    }
+  }
+
+  /// 心跳方法
+  void startHeartbeat() {
+    // 创建定时器
+    heartbeatTimer =
+        Timer.periodic(Duration(milliseconds: heartbeatInterval), (timer) {
+      if (isConnected) {
+        sendHeartbeat();
       } else {
-        Fluttertoast.showToast(msg: proto.reqMsg);
-        ChatRecord record = ChatRecord(
-          targetId: info.id!.toInt(),
-          targetName: info.nickname,
-          fromId: proto.fromId.toInt(),
-          fromName: '',
-          fromAvatar: '',
-          avatar: info.avatar,
-          content: proto.reqMsg,
-          msgType: proto.type,
-          createTime: DateTime.now().millisecondsSinceEpoch,
-          chatType: proto.chatType,
-          logicType: LogicType.friend.code,
-        );
-        ChatStore.to.receiveMsg(record);
+        stopHeartbeat();
       }
-      LogI(
-          '收到：${proto.reqMsg} ${proto.msgCode} ${proto.type} ${proto.fromId} ${proto.receiveId}');
     });
+  }
+
+  /// 开始发送心跳
+  void sendHeartbeat() async {
+    UserInfo? info = await StoreUtil.loadInfo();
+    if (null == info || info.routeInfo == null) {
+      Fluttertoast.showToast(msg: '登录失效，请重新登录！');
+      Get.offAndToNamed(AppRoutes.login);
+      return;
+    }
+    if (socket != null) {
+      sendMsg(info.id ?? 0, info.token ?? '', MsgType.heartbeat);
+    }
+  }
+
+  /// 停止心跳
+  void stopHeartbeat() {
+    if (heartbeatTimer != null && heartbeatTimer!.isActive) {
+      heartbeatTimer!.cancel();
+      heartbeatTimer = null;
+    }
+  }
+
+  void disconnect() {
+    if (null != socket) {
+      socket.destroy();
+      socket.close();
+      isConnected = false;
+    }
   }
 
   /// 向服务器发送消息
@@ -114,7 +183,7 @@ class HomeController extends GetxController {
     // 准备消息参数
     BaseRequestProto req = BaseRequestProto.create();
     req.fromId = Int64(currentUserId.toInt());
-    req.type = MsgType.loginMsg.code;
+    req.type = msgType.code;
     req.reqMsg = message;
     // 发送消息
     Uint8List buff = req.writeToBuffer();

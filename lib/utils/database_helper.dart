@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../constant/enums.dart';
 import '../model/chat_record.dart';
+import '../model/friend_info.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -21,6 +22,7 @@ class DatabaseHelper {
   }
 
   /// id:消息记录id
+  /// uid:对话对象的id
   /// targetId：对象id，可以是用户id，群id
   /// targetName: 对象名称，可以是用户名称，群名称
   /// avatar： 头像
@@ -36,8 +38,17 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'cim-plus.db');
     return openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute("""
+      CREATE TABLE friends (
+       userId INTEGER PRIMARY KEY,
+       nickname TEXT NOT NULL,
+       remark TEXT,
+       avatar TEXT
+      );
+      """);
+      await db.execute("""
         CREATE TABLE chat_records (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
+          uid INTEGER NOT NULL,
           targetId INTEGER NOT NULL,
           targetName TEXT NOT NULL,
           avatar TEXT,
@@ -68,8 +79,8 @@ class DatabaseHelper {
     record.logicType = LogicType.normal.code;
     // 删除旧的逻辑数据并插入新的数据
     await db.delete('chat_records',
-        where: 'targetId = ? and logicType = ?',
-        whereArgs: [record.targetId, record.logicType]);
+        where: 'uid = ? and logicType = ?',
+        whereArgs: [record.uid, record.logicType]);
     await db.insert('chat_records', record.toJson());
   }
 
@@ -93,14 +104,15 @@ class DatabaseHelper {
 
   /// 获取指定用户的对话记录
   Future<List<ChatRecord>> getConversionList(
-      int page, int size, int userId) async {
+    int page,
+    int size,
+    int userId, {
+    LogicType logicType = LogicType.friend,
+  }) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('chat_records',
-        where: 'logicType = 1 and (targetId = ? or fromId = ?)',
-        whereArgs: [
-          userId,
-          userId,
-        ],
+        where: 'logicType = ? and uid = ?',
+        whereArgs: [logicType.code, userId],
         orderBy: 'createTime DESC',
         limit: size,
         offset: (page - 1) * size);
@@ -121,5 +133,39 @@ class DatabaseHelper {
       ],
     );
     LogI("清除消息成功！清除消息条数：$num");
+  }
+
+  /// ------------------同步数据到本地数据库----------------------
+  /// 插入朋友信息列表到数据库
+  Future<void> insertFriendList(List<FriendInfo>? infos) async {
+    if (infos != null && infos.isNotEmpty) {
+      final db = await database;
+      // 先清空所有数据
+      db.delete('friends');
+      // 发起批量插入
+      Batch batch = db.batch();
+      for (FriendInfo info in infos) {
+        batch.insert('friends', info.toMap());
+      }
+      batch.commit(noResult: true);
+    }
+  }
+
+  /// 批量获取好友信息
+  Future<List<FriendInfo>> getFriendList({int? uid}) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps;
+    if (uid == null) {
+      maps = await db.query('friends', orderBy: 'nickname desc');
+    } else {
+      maps = await db.query(
+        'friends',
+        where: 'userId = ?',
+        whereArgs: [uid],
+        orderBy: 'nickname desc',
+      );
+    }
+    return List.generate(
+        maps.length, (index) => FriendInfo.fromJson(maps[index]));
   }
 }

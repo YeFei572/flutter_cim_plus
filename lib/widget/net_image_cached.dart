@@ -18,10 +18,7 @@ Widget netImageCached(
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius.w),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: imageProvider,
-        ),
+        image: DecorationImage(fit: BoxFit.cover, image: imageProvider),
       ),
     ),
     placeholder: (context, url) {

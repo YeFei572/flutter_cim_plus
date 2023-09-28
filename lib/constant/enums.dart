@@ -1,5 +1,6 @@
 /// 消息类型
 enum MsgType {
+  heartbeat(0, '心跳检测'),
   loginMsg(1, '登录消息'),
   txtMsg(2, '文本'),
   picMsg(3, '图片'),

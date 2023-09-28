@@ -72,6 +72,7 @@ class _ChatViewState extends State<ChatView> {
     LogI(editViewController.text);
     ChatRecord record = ChatRecord(
       avatar: widget.avatar,
+      uid: int.parse(widget.id),
       targetId: int.parse(widget.id),
       targetName: widget.title,
       content: editViewController.text,

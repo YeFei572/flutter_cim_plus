@@ -8,6 +8,7 @@ part of 'chat_record.dart';
 
 ChatRecord _$ChatRecordFromJson(Map<String, dynamic> json) => ChatRecord(
       id: json['id'] as int?,
+      uid: json['uid'] as int?,
       targetId: json['targetId'] as int?,
       targetName: json['targetName'] as String?,
       fromId: json['fromId'] as int?,
@@ -24,6 +25,7 @@ ChatRecord _$ChatRecordFromJson(Map<String, dynamic> json) => ChatRecord(
 Map<String, dynamic> _$ChatRecordToJson(ChatRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'uid': instance.uid,
       'targetId': instance.targetId,
       'targetName': instance.targetName,
       'avatar': instance.avatar,

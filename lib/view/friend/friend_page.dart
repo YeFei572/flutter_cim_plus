@@ -1,6 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
+import 'package:flutter_cim_plus/style/refresh_constants.dart';
 import 'package:flutter_cim_plus/widget/net_image_cached.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,8 @@ class FriendPage extends GetView<FriendController> {
       ),
       body: GetX<FriendController>(
         builder: (controller) => EasyRefresh(
-          onRefresh: controller.initFriendData,
+          header: RefreshConstants.buildZhHeaders(),
+          onRefresh: controller.refreshFriends,
           child: ListView.separated(
             itemBuilder: (item, index) {
               FriendInfo info = controller.friendList[index];

@@ -18,6 +18,8 @@ part 'chat_record.g.dart';
 class ChatRecord {
   int? id;
 
+  int? uid;
+
   int? targetId;
 
   String? targetName;
@@ -42,6 +44,7 @@ class ChatRecord {
 
   ChatRecord({
     this.id,
+    this.uid,
     this.targetId,
     this.targetName,
     this.fromId,
