@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cim_plus/store/chat_store.dart';
 import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
+import 'package:flutter_cim_plus/widget/chat_input_widget.dart';
 import 'package:get/get.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -76,6 +77,8 @@ class _ChatViewState extends State<ChatView> {
   }
 
   _sendMsg() async {
+    debugPrint(
+        '----------------------------------------------------------------');
     if (editViewController.text.isEmpty) {
       return;
     }
@@ -124,6 +127,7 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xff3c3f41),
       appBar: AppBar(
         backgroundColor: const Color(0xff2b2b2b),
@@ -139,7 +143,11 @@ class _ChatViewState extends State<ChatView> {
       body: Column(
         children: [
           Expanded(child: _buildMessageList()),
-          _buildInputWidget(),
+          // _buildInputWidget(),
+          ChatInputWidget(
+            inputController: editViewController,
+            onPressed: _sendMsg,
+          )
         ],
       ),
     );
