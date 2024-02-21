@@ -1,5 +1,6 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cim_plus/store/chat_store.dart';
 import 'package:flutter_cim_plus/store/user_store.dart';
 import 'package:flutter_cim_plus/utils/log_utils.dart';
@@ -156,64 +157,69 @@ class _ChatViewState extends State<ChatView> {
   Widget _buildMessageList() {
     /// 获取当前用户的id
     String currentId = UserStore.to.info.id.toString();
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      Widget resultWidget = EasyRefresh.builder(
-        header: const CupertinoHeader(),
-        footer: const CupertinoFooter(
-          position: IndicatorPosition.above,
-          infiniteOffset: null,
-        ),
-        onLoad: () => _loadMsg(),
-        onRefresh: () => _refreshMsg(),
-        childBuilder: (context, physics) {
-          // 新增的代码
-          var listViewPhysics =
-              physics.applyTo(ChatObserverClampingScrollPhysics(
-            observer: chatObserver,
-          ));
-          if (chatObserver.isShrinkWrap) {
-            listViewPhysics =
-                const NeverScrollableScrollPhysics().applyTo(listViewPhysics);
-          }
-          Widget resultWidget1 = ListView.builder(
-            physics: listViewPhysics,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-            shrinkWrap: chatObserver.isShrinkWrap,
-            reverse: true,
-            controller: scrollController,
-            itemBuilder: (context, index) {
-              return MessageItem(
-                myAvatar: UserStore.to.info.avatar,
-                targetAvatar: widget.avatar,
-                chatRecord: records[index],
-                isOwn: currentId == records[index].fromId.toString(),
-              );
-            },
-            itemCount: records.length,
-          );
-          if (chatObserver.isShrinkWrap) {
-            resultWidget1 = SingleChildScrollView(
+    return GestureDetector(
+      onTap: () {
+        debugPrint("====");
+      },
+      child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        Widget resultWidget = EasyRefresh.builder(
+          header: const CupertinoHeader(),
+          footer: const CupertinoFooter(
+            position: IndicatorPosition.above,
+            infiniteOffset: null,
+          ),
+          onLoad: () => _loadMsg(),
+          onRefresh: () => _refreshMsg(),
+          childBuilder: (context, physics) {
+            // 新增的代码
+            var listViewPhysics =
+                physics.applyTo(ChatObserverClampingScrollPhysics(
+              observer: chatObserver,
+            ));
+            if (chatObserver.isShrinkWrap) {
+              listViewPhysics =
+                  const NeverScrollableScrollPhysics().applyTo(listViewPhysics);
+            }
+            Widget resultWidget1 = ListView.builder(
+              physics: listViewPhysics,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              shrinkWrap: chatObserver.isShrinkWrap,
               reverse: true,
-              physics: physics,
-              child: Container(
-                alignment: Alignment.topCenter,
-                height: constraints.maxHeight + 0.001,
-                child: resultWidget1,
-              ),
+              controller: scrollController,
+              itemBuilder: (context, index) {
+                return MessageItem(
+                  myAvatar: UserStore.to.info.avatar,
+                  targetAvatar: widget.avatar,
+                  chatRecord: records[index],
+                  isOwn: currentId == records[index].fromId.toString(),
+                );
+              },
+              itemCount: records.length,
             );
-          }
-          return resultWidget1;
-        },
-      );
-      return Align(
-        alignment: Alignment.topCenter,
-        child: ListViewObserver(
-          controller: observerController,
-          child: resultWidget,
-        ),
-      );
-    });
+            if (chatObserver.isShrinkWrap) {
+              resultWidget1 = SingleChildScrollView(
+                reverse: true,
+                physics: physics,
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  height: constraints.maxHeight + 0.001,
+                  child: resultWidget1,
+                ),
+              );
+            }
+            return resultWidget1;
+          },
+        );
+        return Align(
+          alignment: Alignment.topCenter,
+          child: ListViewObserver(
+            controller: observerController,
+            child: resultWidget,
+          ),
+        );
+      }),
+    );
   }
 
   Widget _buildInputWidget() {

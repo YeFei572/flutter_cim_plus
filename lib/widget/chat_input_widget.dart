@@ -30,6 +30,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget>
   final FocusNode focusNode = FocusNode();
 
   double _keyboardHeight = 0;
+
   //是否键盘弹出
   bool isKeyboard = false;
   bool autoShowKeyboard = false;
@@ -39,7 +40,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _keyboardHeight = StoreUtil.store.read('keyboardHeight') ?? 275.w;
+    _keyboardHeight = StoreUtil.store.read('keyboardHeight') ?? 175.w;
   }
 
   @override
@@ -227,7 +228,6 @@ class _ChatInputWidgetState extends State<ChatInputWidget>
     if (inputType == INPUT_TYPE_MORE) {
       child = const ChatMorePanel();
     } else if (inputType == INPUT_TYPE_EMOJI) {
-      debugPrint('表情包');
       child = EmojiGridView(
         onTap: (EmojiModel emoji) {
           widget.inputController.insertText(emoji.tag!);

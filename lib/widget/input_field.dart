@@ -119,6 +119,9 @@ class _InputFieldState extends State<InputField> {
                         showAt: widget.showTopic ?? false),
                     onSubmitted: widget.onSubmitted,
                     onTap: widget.onTap,
+                    onTapOutside: (e) {
+                      widget.focusNode?.unfocus();
+                    },
                     inputFormatters: <TextInputFormatter>[
                         if (widget.lengthLimiting != null)
                           LengthLimitingTextInputFormatter(
@@ -154,6 +157,9 @@ class _InputFieldState extends State<InputField> {
                     controller: widget.controller,
                     onSubmitted: widget.onSubmitted,
                     onTap: widget.onTap,
+                    onTapOutside: (e) {
+                      widget.focusNode?.unfocus();
+                    },
                     inputFormatters: <TextInputFormatter>[
                         if (widget.lengthLimiting != null)
                           LengthLimitingTextInputFormatter(
